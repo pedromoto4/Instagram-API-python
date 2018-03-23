@@ -384,7 +384,7 @@ class InstagramAPI:
             except:
                 pass
             return False
-    
+
     def direct_message(self, text, recipients):
         if type(recipients) != type([]):
             recipients = [str(recipients)]
@@ -426,7 +426,7 @@ class InstagramAPI:
         )
         #self.SendRequest(endpoint,post=data) #overwrites 'Content-type' header and boundary is missed
         response = self.s.post(self.API_URL + endpoint, data=data)
-        
+
         if response.status_code == 200:
             self.LastResponse = response
             self.LastJson = json.loads(response.text)
@@ -440,7 +440,7 @@ class InstagramAPI:
             except:
                 pass
             return False
-        
+
     def direct_share(self, media_id, recipients, text=None):
         if not isinstance(position, list):
             recipients = [str(recipients)]
@@ -955,6 +955,19 @@ class InstagramAPI:
                                'User-Agent': self.USER_AGENT})
 
         while True:
+            try:
+                if (post is not None):
+                    response = self.s.post(self.API_URL + endpoint, data=post, verify=verify)
+                else:
+                    response = self.s.get(self.API_URL + endpoint, verify=verify)
+                break
+            except Exception as e:
+                print('Except on SendRequest (wait 60 sec and resend): ' + str(e))
+                time.sleep(60)
+
+        while response.status_code == 202:
+            print('Sleeping 2 seconds')
+            time.sleep(2)
             try:
                 if (post is not None):
                     response = self.s.post(self.API_URL + endpoint, data=post, verify=verify)
