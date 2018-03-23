@@ -966,7 +966,6 @@ class InstagramAPI:
                 time.sleep(60)
 
         while response.status_code == 202:
-            print('Sleeping 2 seconds')
             time.sleep(2)
             try:
                 if (post is not None):
